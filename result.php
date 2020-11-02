@@ -72,7 +72,7 @@ if($keyword == '' && $town == 'none' && $subject == 'none'){
     GROUP BY H.hospitalIdx
     ORDER BY SUM(rating)/COUNT(rating) DESC;";
     
-    $sql2 = "SELECT pharmName, tel, townName
+    $sql2 = "SELECT P.pharmIdx as pharmIdx, pharmName, tel, townName
     FROM ReviewForPharm
     join Pharmacy P on P.pharmIdx = ReviewForPharm.pharmIdx
     join Town T on P.townIdx = T.townIdx
@@ -89,7 +89,7 @@ if($keyword == '' && $town == 'none' && $subject == 'none'){
     GROUP BY H.hospitalIdx
     ORDER BY SUM(rating)/COUNT(rating) DESC;";
 
-    $sql2 = "SELECT pharmName, tel, townName
+    $sql2 = "SELECT P.pharmIdx as pharmIdx, pharmName, tel, townName
     FROM ReviewForPharm
     join Pharmacy P on P.pharmIdx = ReviewForPharm.pharmIdx
     join Town T on P.townIdx = T.townIdx
@@ -128,7 +128,7 @@ if($keyword == '' && $town == 'none' && $subject == 'none'){
     GROUP BY H.hospitalIdx
     ORDER BY SUM(rating)/COUNT(rating) DESC;";
 
-    $sql2 = "SELECT pharmName, tel, townName
+    $sql2 = "SELECT P.pharmIdx as pharmIdx, pharmName, tel, townName
     FROM ReviewForPharm
     join Pharmacy P on P.pharmIdx = ReviewForPharm.pharmIdx
     join Town T on P.townIdx = T.townIdx
@@ -156,7 +156,7 @@ if($keyword == '' && $town == 'none' && $subject == 'none'){
     GROUP BY H.hospitalIdx
     ORDER BY SUM(rating)/COUNT(rating) DESC;";
 
-     $sql2 = "SELECT pharmName, tel, townName
+     $sql2 = "SELECT P.pharmIdx as pharmIdx, pharmName, tel, townName
     FROM ReviewForPharm
     join Pharmacy P on P.pharmIdx = ReviewForPharm.pharmIdx
     join Town T on P.townIdx = T.townIdx
@@ -215,9 +215,7 @@ while($row = mysqli_fetch_assoc($result)) {
     $i=$i+1;
     
     $index = $row['hospitalIdx'];
-    echo $index;
-    $path='detail.php?varname='.$index;
-    echo $path;
+    $path='detail.php?type=hospital&&varname='.$index;
     $table=$table.'
     <tr>
       <td style="border-bottom: 1px solid #ededed;
@@ -277,6 +275,8 @@ $i=0;
 while($row = mysqli_fetch_assoc($result2)) { 
     
     $i=$i+1;
+    $index = $row['pharmIdx'];
+    $path='detail.php?type=pharmacy&&varname='.$index;
     $table=$table.'
     <tr>
       <td style="border-bottom: 1px solid #ededed;
@@ -284,7 +284,10 @@ while($row = mysqli_fetch_assoc($result2)) {
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;"><img src="image/pharmacy.png" width="70" height="70" style="border-radius: 7px;"/></td>
       <td style="border-bottom: 1px solid #ededed;
-      padding: 10px; color: steelblue;"><h3>'.$row['pharmName'].'</td>
+      padding: 10px; color: steelblue; cursor:pointer;">
+      <a style="border-bottom: 1px solid #ededed;
+      padding: 10px; color: steelblue;" href='.$path.' <h3>'.$row['pharmName'].'</a>
+      </td>
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;">'.$row['tel'].'</h3></td>
       <td style="border-bottom: 1px solid #ededed;

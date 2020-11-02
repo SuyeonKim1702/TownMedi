@@ -60,7 +60,7 @@ $conn = mysqli_connect(
   'root',
   '',
   'townmedi');
-$sql = "SELECT hospitalName, tel, townName, SubjectName
+$sql = "SELECT H.hospitalIdx as hospitalIdx, hospitalName, tel, townName, SubjectName
 FROM ReviewForHospital
 join Hospital H on H.hospitalIdx = ReviewForHospital.hospitalIdx
 join Town T on H.townIdx = T.townIdx
@@ -99,6 +99,8 @@ $table='<table id="tbmain" style="margin: 12px;" >
 while($row = mysqli_fetch_assoc($result)) { 
   
     $i=$i+1;
+    $index = $row['hospitalIdx'];
+    $path='detail.php?type=hospital&&varname='.$index;
     $table=$table.'
     <tr>
       <td style="border-bottom: 1px solid #ededed;
@@ -106,7 +108,10 @@ while($row = mysqli_fetch_assoc($result)) {
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;"><img src="image/thumb.png" width="70" height="70" style="border-radius: 7px;"/></td>
       <td style="border-bottom: 1px solid #ededed;
-      padding: 10px; color: steelblue;"><h3>'.$row['hospitalName'].'</td>
+      padding: 10px; color: steelblue; cursor:pointer;">
+      <a style="border-bottom: 1px solid #ededed;
+      padding: 10px; color: steelblue;" href='.$path.' <h3>'.$row['hospitalName'].'</a>
+      </td>
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;">'.$row['tel'].'</h3></td>
       <td style="border-bottom: 1px solid #ededed;
@@ -128,7 +133,7 @@ $conn = mysqli_connect(
   'root',
   '',
   'townmedi');
-$sql = "SELECT pharmName, tel, townName
+$sql = "SELECT P.pharmIdx as pharmIdx, pharmName, tel, townName
 FROM ReviewForPharm
 join Pharmacy P on P.pharmIdx = ReviewForPharm.pharmIdx
 join Town T on P.townIdx = T.townIdx
@@ -164,6 +169,8 @@ $table='<table id="tbmain" style="margin: 12px;" >
 while($row = mysqli_fetch_assoc($result)) { 
   
     $i=$i+1;
+    $index = $row['pharmIdx'];
+    $path='detail.php?type=pharmacy&&varname='.$index;
     $table=$table.'
     <tr>
       <td style="border-bottom: 1px solid #ededed;
@@ -171,7 +178,10 @@ while($row = mysqli_fetch_assoc($result)) {
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;"><img src="image/pharmacy.png" width="70" height="70" style="border-radius: 7px;"/></td>
       <td style="border-bottom: 1px solid #ededed;
-      padding: 10px; color: steelblue;"><h3>'.$row['pharmName'].'</td>
+      padding: 10px; color: steelblue; cursor:pointer;">
+      <a style="border-bottom: 1px solid #ededed;
+      padding: 10px; color: steelblue;" href='.$path.' <h3>'.$row['pharmName'].'</a>
+      </td>
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;">'.$row['tel'].'</h3></td>
       <td style="border-bottom: 1px solid #ededed;
@@ -184,8 +194,6 @@ while($row = mysqli_fetch_assoc($result)) {
 $table=$table.'</table>';
 echo $table;
 ?>
-
-
         </div>
         
     </body>
