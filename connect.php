@@ -43,10 +43,6 @@
   </select>
 
 </form>
-
-
-
-
         </div>
 
 
@@ -191,6 +187,8 @@ while($row = mysqli_fetch_assoc($result)) {
    
    
 }
+
+
 $table=$table.'</table>';
 echo $table;
 ?>

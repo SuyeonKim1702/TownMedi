@@ -191,7 +191,6 @@ $table='<form ACTION ="detail.php" METHOD="POST">
 <col style="width:20%">
 <col style="width:15%">
 <col style="width:15%">
-
 <tr>
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;">ranking</td>
@@ -205,7 +204,6 @@ $table='<form ACTION ="detail.php" METHOD="POST">
       padding: 10px;">area</td>
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;">subject</td>
-
     
     </tr>';
 $i=0;
@@ -254,8 +252,6 @@ if($sql2!=''){
 <col style="width:20%">
 <col style="width:20%">
 <col style="width:15%">
-
-
 <tr>
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;">ranking</td>
@@ -268,7 +264,6 @@ if($sql2!=''){
       <td style="border-bottom: 1px solid #ededed;
       padding: 10px;">area</td>
     
-
     
     </tr>';
 $i=0;
@@ -308,5 +303,3 @@ echo $table;
 
     </body>
 </html>
-
-
