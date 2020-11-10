@@ -5,7 +5,8 @@
     </head>
     <body>
         <div id="top">
-        <h1 id="logo"><img src="image/logo.png" width="280" height="140"/></h1>
+        <a href="connect.php">
+        <h1 id="logo"><img src="image/logo.png" width="280" height="140"/></h1></a>
          <form ACTION ="result.php" METHOD="POST" style="margin-top:50px;" name="keyword">
 <INPUT style="font-size:17px;" TYPE="TEXT" name="keyword" placeholder="type a keyword"><INPUT style="font-size:17px; margin-left:5px;" TYPE="submit" value="search"><BR>
 
@@ -51,12 +52,15 @@
  
 
 <?php
+session_start();
+
+$_SESSION[ 'index' ] = -1;
 $conn = mysqli_connect(
   'localhost',
   'root',
   '',
   'townmedi');
-$sql = "SELECT H.hospitalIdx as hospitalIdx, hospitalName, tel, townName, SubjectName
+$sql = "SELECT H.hospitalIdx as hospitalIdx, hospitalName, tel, townName, SubjectName, dense_rank() over (order by SUM(rating)/COUNT(rating) desc) as s_rank
 FROM ReviewForHospital
 join Hospital H on H.hospitalIdx = ReviewForHospital.hospitalIdx
 join Town T on H.townIdx = T.townIdx
@@ -194,6 +198,131 @@ echo $table;
 ?>
         </div>
         
+
+
+
+        <div style="margin-top:100px; margin-left:10px;"> <h1> The average rating & price of hospitals by village </h1></div>
+
+<?php
+$conn = mysqli_connect(
+  'localhost',
+  'root',
+  '',
+  'townmedi');
+$sql = "SELECT  distinct T.townName as townName, AVG(rating) over (partition by H.townIdx) as Avg, AVG(cost) over (partition by H.townIdx) as Cost
+from ReviewForHospital
+join Hospital H on H.hospitalIdx = ReviewForHospital.hospitalIdx
+join Town T on T.townIdx = H.townIdx
+order by Avg DESC;";
+$i = 0;
+$result = mysqli_query($conn, $sql);
+
+
+$table='<table id="tbmain" style="margin: 12px;" >
+<colgroup>
+<col style="width:10%">
+<col style="width:10%">
+<col style="width:20%">
+
+
+<tr>
+      <td style="border-bottom: 1px solid #ededed;
+      padding: 10px;">town</td>
+      <td style="border-bottom: 1px solid #ededed;
+      padding: 10px;">Avg rating</td>
+      <td style="border-bottom: 1px solid #ededed;
+      padding: 10px;">Avg costs</td>
+   
+    
+    </tr>
+';
+while($row = mysqli_fetch_assoc($result)) { 
+  
+    $table=$table.'
+    <tr>
+    <td style="border-bottom: 1px solid #ededed;
+    padding: 10px;"><h2>'.$row['townName'].'</h2></td>
+    <td style="border-bottom: 1px solid #ededed;
+    padding: 10px;">'.$row['Avg'].'</h3></td>
+    <td style="border-bottom: 1px solid #ededed;
+    padding: 10px;">'.(int)$row['Cost'].' won</h3></td>
+    
+    </tr>';
+   
+   
+}
+
+
+$table=$table.'</table>';
+echo $table;
+?>
+        </div>
+
+
+
+
+        <div style="margin-top:100px; margin-left:10px;"> <h1> The average rating & price of pharmacies by village </h1></div>
+
+<?php
+$conn = mysqli_connect(
+  'localhost',
+  'root',
+  '',
+  'townmedi');
+$sql = "SELECT  distinct T.townName, AVG(rating) over (partition by T.townIdx) as Avg, AVG(cost) over (partition by P.townIdx) as Cost
+from ReviewForPharm
+join Pharmacy P on ReviewForPharm.pharmIdx = P.pharmIdx
+join Town T on T.townIdx = P.townIdx
+order by Avg DESC;";
+$i = 0;
+$result = mysqli_query($conn, $sql);
+
+
+$table='<table id="tbmain" style="margin: 12px;" >
+<colgroup>
+<col style="width:10%">
+<col style="width:10%">
+<col style="width:20%">
+
+
+<tr>
+      <td style="border-bottom: 1px solid #ededed;
+      padding: 10px;">town</td>
+      <td style="border-bottom: 1px solid #ededed;
+      padding: 10px;">Avg rating</td>
+      <td style="border-bottom: 1px solid #ededed;
+      padding: 10px;">Avg costs</td>
+   
+    
+    </tr>
+';
+while($row = mysqli_fetch_assoc($result)) { 
+  
+    $table=$table.'
+    <tr>
+    <td style="border-bottom: 1px solid #ededed;
+    padding: 10px;"><h2>'.$row['townName'].'</h2></td>
+    <td style="border-bottom: 1px solid #ededed;
+    padding: 10px;">'.$row['Avg'].'</h3></td>
+    <td style="border-bottom: 1px solid #ededed;
+    padding: 10px;">'.(int)$row['Cost'].' won</h3></td>
+    
+    </tr>';
+   
+   
+}
+
+
+$table=$table.'</table>';
+echo $table;
+?>
+        </div>
+
+
+
+
+
+
     </body>
 </html>
 

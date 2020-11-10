@@ -5,10 +5,11 @@
     </head>
     <body>
         <div id="top">
-        <h1 id="logo"><img src="image/logo.png" width="280" height="140"/></h1>
+        <a href="connect.php">
+        <h1 id="logo"><img src="image/logo.png" width="280" height="140"/></h1></a>
         <form ACTION ="result.php" METHOD="POST" style="margin-top:50px;" name="keyword">
 <INPUT style="font-size:17px;" TYPE="TEXT" name="keyword" placeholder="type a keyword"><INPUT style="font-size:17px; margin-left:5px;" TYPE="submit" value="search"><BR>
-<select  style="font-size:17px; margin-top:40px; margin-right:10px" name="town" >
+<select  style="font-size:17px; margin-top:40px; margin-right:10px" name="town">
     <option  value="none">=== select town ===</option>
     <option value=1>Englewood</option>
     <option value=2>Denver</option>
@@ -54,6 +55,8 @@ $town = $_POST['town'];
 $subject = $_POST['subject'];
 $sql2 ='';
 session_start();
+
+$_SESSION[ 'index' ] = -1;
 
 $conn = mysqli_connect(
     'localhost',

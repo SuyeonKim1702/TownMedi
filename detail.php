@@ -9,27 +9,103 @@
 
     <?php
     session_start();
- 
-    $index = $_GET['varname']; 
-    $type =  $_GET['type']; 
-    $src = $_GET['src'];
+    // 리뷰 창에서 넘어온 애 
+    $user = 1;
+    
+    
+
+    if($_SESSION['index'] == -1){
+      $index = $_GET['varname']; 
+      $type =  $_GET['type']; 
      
-
+      
     
-    
+      //post
+      if(isset($_GET['src']) && $_SESSION['post'] =='N' && $_SESSION['edit'] == 'N'){
+        
+        $_SESSION['post'] ='Y';
+        $cost = $_POST['cost'];
+        $time = $_POST['time'];
+        $rating = $_POST['rating'];
+        $comment = $_POST['review'];
+        $rec= $_POST['yesoryes'];
+        $_SESSION['edit'] = 'N';
+        
+  
+       // echo $index, $rating, $rec, $time, $cost, $comment;
+  
+        $conn = mysqli_connect(
+          'localhost',
+          'root',
+          '',
+          'townmedi');
+  
+       if($type=='hospital'){
+        $sql="INSERT INTO ReviewForHospital (userIdx, hospitalIdx, rating, recommend, waitingTime, cost, comment)
+        VALUES
+        ($user, $index, $rating, '$rec', $time, $cost, '$comment')";
+       }else if($type == 'pharmacy'){
+        $sql="INSERT INTO ReviewForPharm (userIdx, pharmIdx, rating, recommend, waitingTime, cost, comment)
+        VALUES
+        ($user, $index, $rating, '$rec', $time, $cost, '$comment')";
+       }
+  
+  
+       if (!mysqli_query($conn,$sql)){
+         die('Error: ' . mysqli_error($conn));
+    }
+  
+       mysqli_close($conn);
+      
+       
+  
+      }else if(isset($_GET['src']) && $_SESSION['post'] =='N' && $_SESSION['edit'] == 'Y'){
+      
+        $_SESSION['post'] ='Y';
+        $_SESSION['edit'] = 'N';
+        $cost = $_POST['cost'];
+        $time = $_POST['time'];
+        $rating = $_POST['rating'];
+        $comment = $_POST['review'];
+        $rec= $_POST['yesoryes'];
+        $time = $_POST['time'];
 
-    //post
-    if($src=='create' &&$_SESSION['post'] =='N'){
 
-      $_SESSION['post'] ='Y';
-      $cost = $_POST['cost'];
-      $time = $_POST['time'];
-      $rating = $_POST['rating'];
-      $comment = $_POST['review'];
-      $rec= $_POST['yesoryes'];
+        $conn = mysqli_connect(
+          'localhost',
+          'root',
+          '',
+          'townmedi');
+  
+       if($type=='hospital'){
+        $sql="UPDATE ReviewForHospital 
+        SET rating = {$rating}, recommend = '{$rec}', waitingTime = {$time}, comment = '{$comment}'
+        WHERE userIdx = {$user} AND hospitalIdx = {$index};";
+       }else if($type == 'pharmacy'){
+        $sql="UPDATE ReviewForPharm 
+        SET rating = {$rating}, recommend = '{$rec}', waitingTime = {$time}, comment = '{$comment}'
+        WHERE userIdx = {$user} AND pharmacyIdx = {$index};";
+       }
+  
+  
+       if (!mysqli_query($conn,$sql)){
+         die('Error: ' . mysqli_error($conn));
+    }
+  
+       mysqli_close($conn);
       
 
+
+
+      }
+      
+    }else if(isset($_POST['click'])){  //delete
     
+      
+      $index = $_SESSION['index'];
+      $type = $_SESSION['type'];
+      
+
 
       $conn = mysqli_connect(
         'localhost',
@@ -38,9 +114,9 @@
         'townmedi');
 
      if($type=='hospital'){
-      $sql="INSERT INTO ReviewForHospital (userIdx, hospitalIdx, rating, recommend, waitingTime, cost, comment)
-      VALUES
-      (1, $index, $rating, '$rec', $time, $cost, '$comment')";
+     $sql = "DELETE FROM ReviewForHospital WHERE userIdx = {$user} AND hospitalIdx = {$index}";
+     }else if($type == 'pharmacy'){
+      $sql = "DELETE FROM ReviewForPharm WHERE userIdx = {$user} AND pharmIdx = {$index}";
      }
 
 
@@ -52,16 +128,22 @@
     
      
 
+    }else{
+      $index = $_SESSION['index'];
+      $type = $_SESSION['type'];
     }
     
+    
+   $_SESSION['edit'] = 'N';
 
 
  
  ?>
 
         <div id="top">
-        <h1 id="logo"><img src="image/logo.png" width="280" height="140"/></h1>
-        <form ACTION ="result.php" METHOD="POST" style="margin-top:50px;" name="keyword">
+        <a href="connect.php">
+        <h1 id="logo"><img src="image/logo.png" width="280" height="140"/></h1></a>
+                <form ACTION ="result.php" METHOD="POST" style="margin-top:50px;" name="keyword">
 <INPUT style="font-size:17px;" TYPE="TEXT" name="keyword" placeholder="type a keyword"><INPUT style="font-size:17px; margin-left:5px;" TYPE="submit" value="search"><BR>
 <select  style="font-size:17px; margin-top:40px; margin-right:10px" name="town" >
     <option  value="none">=== select town ===</option>
@@ -206,7 +288,14 @@ $text = '<div style="float: left; width: 40%; text-align: center;">
 <div style="float: left; width: 35%; text-align: left;">
 <div style="color: #2a2ead; font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: larger; margin-left: -60px; margin-top: -30px"><h1>'.$pharmName.'</h1></div>
 
+
 <div style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 23px; margin-left: -60px; margin-top: 20px">Nuber of Mask: '.$mask.' </div>
+
+<FORM NAME=delete METHOD=POST ACTION="reserve.php">
+<button NAME=index VALUE='.$index.' style="background-color:#1c4a94; color:#ffffff; border-radius:10px; margin-top:10px; margin-left: -60px; margin-bottom: 30px; color: font-family: Verdana, Geneva, Tahoma, sans-serif; font-size:25px;">Reserve a mask</button>
+</FORM> 
+
+
 
 <div style="color: #1c4a94; font-weight: bold; font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 23px; margin-left: -60px; margin-top: 15px">Open at: '.$openTime.'</div>
 <div style="color: #1c4a94; font-weight: bold; font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 23px; margin-left: -60px; margin-top: 5px">Close at: '.$closedTime.'</div>
@@ -270,7 +359,7 @@ while($row1 = mysqli_fetch_assoc($result3)){
   }
    
   $text=$text.'<div style="font-family: Verdana, Geneva, Tahoma, sans-serif;font-size: 23px;" >Recommend Percentage</div></div>
-  </div> <div style="height:100px;" ><div style="float:left; height:100px; font-size:50px; margin-left:120px; font-family: Verdana, Geneva, Tahoma, sans-serif; ">Reviews</div>
+  </div> <hr style="margin-left:120px; margin-right:120px;"> <div style="height:100px;" ><div style="float:left; height:100px; font-size:50px; margin-left:120px; font-family: Verdana, Geneva, Tahoma, sans-serif; ">Reviews</div>
   <div style="float:left; height:100px;  margin-left:120px; "> <a href="review.php?type='.$type.'&&varname='.$index.'"><button style="background-color:#1c4a94; color:#ffffff; border-radius:10px; margin-top:10px; color: font-family: Verdana, Geneva, Tahoma, sans-serif; font-size:25px;">write a review</button>
   </a>
   </div>
@@ -278,14 +367,12 @@ while($row1 = mysqli_fetch_assoc($result3)){
   
 
 
-
-
   if($type=='hospital'){
-    $sql4="SELECT rating, recommend, comment, userName from ReviewForHospital
+    $sql4="SELECT rating, recommend, comment, userName, U.userIdx as userIdx from ReviewForHospital
     join User U on U.userIdx = ReviewForHospital.userIdx
     where hospitalIdx={$index};";
   }else{
-    $sql4="SELECT rating, recommend, comment, userName from ReviewForPharm
+    $sql4="SELECT rating, recommend, comment, userName, U.userIdx as userIdx from ReviewForPharm
     join User U on U.userIdx = ReviewForPharm.userIdx
     where pharmIdx={$index};";
   }
@@ -305,9 +392,7 @@ while($row1 = mysqli_fetch_assoc($result4)){
   
   $name = $row1['userName'];
   $comment = $row1['comment'];
-
-
-
+  $userIdx = $row1['userIdx'];
 
 
   $text=$text.'<div style="margin-left:130px; height:200px;"> 
@@ -320,7 +405,7 @@ while($row1 = mysqli_fetch_assoc($result4)){
   </div>
   <div style="float: left; width: 30%; ">';
 
-
+  
 
   for($i=0;$i<$rating;$i++)
    $text=$text.'<span class="fa fa-star checked" style="font-size: 30px; color:#ffdf29;"></span>';
@@ -329,8 +414,27 @@ while($row1 = mysqli_fetch_assoc($result4)){
    $text=$text.'<span class="fa fa-star checked" style="font-size: 30px;"></span>';
 
    $text=$text.'<div style="font-family: Verdana, Geneva, Tahoma, sans-serif;font-size: 20px; margin-top: 10px;">'.$comment.'</div>
-   </div>
    </div>';
+
+   if($userIdx == 1){
+
+   
+    $_SESSION[ 'index' ] = $index;
+    $_SESSION['type'] = $type;
+    $_SESSION['edit'] = 'Y';
+    
+  
+    $text=$text.'<div style="float: left; width: 30%; "> 
+     <FORM NAME=edit METHOD=MODIFY ACTION="review.php">
+ <button style="background-color:#1c4a94; color:#ffffff; border-radius:10px; margin-top:10px; color: font-family: Verdana, Geneva, Tahoma, sans-serif; font-size:20px;">Edit</button></Form>
+ <FORM NAME=delete METHOD=POST ACTION="detail.php">
+     <button NAME=click VALUE="Y" style="background-color:#1c4a94; color:#ffffff; border-radius:10px; margin-top:10px; color: font-family: Verdana, Geneva, Tahoma, sans-serif; font-size:20px;">Delete</button><div> </Form>';
+   }
+   
+
+
+
+   $text= $text.'</div>';
 
   }
 
