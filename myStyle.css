@@ -1,0 +1,132 @@
+body{
+    margin: 0;
+    font-family:"Nanum Gothic Coding"
+}
+.top-container{
+    background-image : url('mainimg.png') ;
+    background-repeat : no-repeat;
+    background-size : cover;
+    background-position : center center;
+    height: 450px;
+    position: relative;
+
+    
+}
+
+.top-container:before{
+    content:""; position:absolute; top:0; left:0; right:0; bottom:0;
+    background-color:rgba(0,0,0,0.2); display:block; z-index:1; 
+}
+.contents{
+    position:absolute; z-index:2;
+}
+.main-content{
+    position:absolute;
+    top: 130px;
+    left: 350px;
+
+}
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:10px 30px;
+}
+
+.navbar a{
+    text-decoration:none;
+    color:white;
+}
+
+.nav-logo{
+    font-size:24px;   
+}
+
+.nav-logo i{  
+    color:orange;
+}
+
+.nav-menu{
+    display:flex;
+    list-style:none;
+    
+}
+.nav-menu li{
+    padding:8px 15px;
+}
+/* 검색창 */
+form.main-searchbox{
+    text-align:center;
+    display:flex;
+
+}
+.title{
+    color: white;
+    text-align: center;
+}
+
+form.main-searchbox input{
+    background-color: white;
+    width: 460px;
+    height:50px;
+    padding: 10px;
+    /* 테두리를 원형으로 border-top-left-radius:25px;
+    border-bottom-left-radius:25px; 시계방향으로*/
+    border-radius:25px 0 0 25px;
+    /* 음각 없애기 */
+    border:none;
+}
+form.main-searchbox button{
+    cursor:pointer;
+    background-color:orange;
+    width:80px;
+    height:50px;
+    padding:10px;
+    border-radius:0 25px 25px 0;
+    border:none;
+    margin-left:-8px;
+
+}
+
+.bottom-container{
+    display:flex;
+    margin: 0 ;
+    height:500px;
+}
+
+.bottom-left-container{
+    /*컨텐츠를 가운데로*/
+    position:relative;
+    width:50%;
+}
+.intro{
+    position:absolute;
+    top:178px;
+    left:20%;
+    margin:0px;
+    text-align:center;
+    /* line-height :행간값설정 */
+    line-height:8px;  
+    font-size:24px;
+}
+.bottom-right-container{
+    width:50%;
+    padding-top:10px;
+}
+.info-list{
+    list-style: none;    
+}
+.info-list li{
+    line-height: 30px;
+}
+.info-list i{
+    font-size: 25px;
+}
+
+.pointerInfo{
+    position:absolute;
+    margin:10px;
+    top:70%;
+    left:70%;
+}
